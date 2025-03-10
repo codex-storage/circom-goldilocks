@@ -16,6 +16,14 @@ template ToGoldilocksWrapper() {
   goldi.val ==> out;
 }
 
+template ReduceWrapper(k) {
+  signal input  inp;
+  signal output out;
+
+  Goldilocks() goldi <== ReduceModP(k);
+  goldi.val ==> out;
+}
+
 //------------------------------------------------------------------------------
 
 template NegWrapper() {

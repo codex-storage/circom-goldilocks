@@ -26,10 +26,10 @@ To start with, we can do a simple bit-decomposition based range check for the ra
 Then for example we could do another such range check for `x + 2^32 - 1` instead of `x`,
 and that would be sufficient; however, this doubles the number of range checks.
 
-Instead, we can exploit the special form the prime `P`: Observe, that in binary
+Instead, we can exploit the special form of the prime `P`: Observe, that in binary
 decomposition, `P - 1` looks like this:
 
-        P-1  =  2^64 - 2^32  =  0x FFFF FFFF FFFF FFFF 0000 0000 0000 0000 
+        P-1  =  2^64 - 2^32  =  0x FFFF FFFF 0000 0000 
 
 This means, that if we already know that `x` fits into 64 bits, then it's enough
 to check that IF the top 32 bits are all 1, THEN the bottom 32 bits are all 0

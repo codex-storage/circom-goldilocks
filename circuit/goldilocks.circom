@@ -75,6 +75,25 @@ template ToGoldilocks() {
   out.val <== bin.val;
 }
 
+//------------------------------------------------------------------------------
+
+// reduce numbers in the range `0 <= x < 2^k * P` modulo P
+template ReduceModP(k) {
+  signal input inp;
+  output Goldilocks() out;
+
+  var P = FieldPrime();
+
+  signal quot <-- inp \ P;
+  signal rem  <-- inp % P;
+
+  // check that `quot` is in a `k` bit range!
+  component bits = ToBits( k );
+  bits.inp <== quot;                             
+
+  inp === rem + P * quot;          // check the multiplication equation
+  out <== ToGoldilocks()(rem);     // range check on the output
+}
 
 //------------------------------------------------------------------------------
 
@@ -147,23 +166,14 @@ template Sum(k) {
   input  Goldilocks() A[k];
   output Goldilocks() C;
 
-  var P = FieldPrime();
-
   // sum A[i] = C + P * Q
   // since all A[i] < 2^64, Q will have at most as many bits as `k` have
   // so we can do a simple binary range-check on Q
 
   var sum = 0;
   for(var i=0; i<k; i++) { sum += A[k].val; }
-  signal quot <-- sum \ k;                       // integer division, not field division!
-  signal rem  <-- sum - quot*P;
 
-  // check that quot is in the expected range
-  component bits = ToBits( CeilLog2(k) );
-  bits.inp <== quot;                             
-
-  sum === rem + P * quot;           // check the sum equation
-  C <== ToGoldilocks()(rem);        // range check on C
+  C <== ReduceModP( CeilLog2(k) )( sum ); 
 }
 
 //------------------------------------------------------------------------------
@@ -176,45 +186,27 @@ template Mul() {
   input  Goldilocks() A,B;
   output Goldilocks() C;
 
-  var P = FieldPrime();
-
   // A * B = C + P * Q
 
-  var product = A.val * B.val;
-  signal quot <-- product \ P;
-  signal rem  <-- product % P;
-
-  // check that `quot` is in a 64 bit range!
-  component bits = ToBits( SolinasExpoBig() );
-  bits.inp <== quot;                             
-
-  A.val * B.val === rem + P * quot;     // check the multiplication equation
-  C <== ToGoldilocks()(rem);            // range check on C
+  C <== ReduceModP( SolinasExpoBig() )( A.val * B.val ); 
 }
 
 
 //
 // multiplication of 3 Goldilocks field elements
+// as this still fits into 192 < 254 bits, we can do it a bit more efficiently
+// than two multiplications.
 //
 
 template Mul3() {
   input  Goldilocks() A,B,C;
   output Goldilocks() D;
 
-  var P = FieldPrime();
-
   // A * B * C = D + P * Q
 
-  var product = A.val * B.val * C.val;
-  signal quot <-- product \ P;
-  signal rem  <-- product % P;
+  signal AB <== A.val * B.val;
 
-  // check that `quot` is in a 128 bit range!
-  component bits = ToBits( 2 * SolinasExpoBig() );
-  bits.inp <== quot;                             
-
-  A.val * B.val * C.val === rem + P * quot;     // check the multiplication equation
-  D <== ToGoldilocks()(rem);                    // range check on D
+  D <== ReduceModP( 2 * SolinasExpoBig() )( AB * C.val ); 
 }
 
 //------------------------------------------------------------------------------
