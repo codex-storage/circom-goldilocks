@@ -18,11 +18,11 @@ pragma circom 2.2.0;
 
 //------------------------------------------------------------------------------
 
-function SolinasExpoBig()   { return 64; }
-function SolinasExpoSmall() { return 32; }
+// function SolinasExpoBig()   { return 64; }
+// function SolinasExpoSmall() { return 32; }
 
-// function SolinasExpoBig()   { return 8; }
-// function SolinasExpoSmall() { return 4; }
+function SolinasExpoBig()   { return 8; }
+function SolinasExpoSmall() { return 4; }
 
 function FieldPrime()  { 
   return (2**SolinasExpoBig() - 2**SolinasExpoSmall() + 1); 

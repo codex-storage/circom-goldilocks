@@ -2,13 +2,15 @@
 
 ORIG=`pwd`
 MAIN="testmain"
-INPUT="dummy.json"
+INPUT="input.json"
 
 cd build
 
 circom ../${MAIN}.circom --r1cs --wasm
 
-echo '{ "dummy": 666 }' >${INPUT}
+#echo '{ "dummy": 666 }' >${INPUT}
+#echo '{ "A": [66,111] }' >${INPUT}
+echo '{ "A": [57,137] , "B": [66,111] }' >${INPUT}
 
 cd ${MAIN}_js
 

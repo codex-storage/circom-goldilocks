@@ -65,6 +65,17 @@ template SubWrapper() {
 
 //------------------------------------------------------------------------------
 
+template SqrWrapper() {
+  signal input  A;
+  signal output C;
+
+  Goldilocks() A1; A1.val <== A;
+  Goldilocks() C1; 
+
+  C1 <== Sqr()( A1 );
+  C1.val ==> C;
+}
+
 template MulWrapper() {
   signal input  A,B;
   signal output C;
@@ -76,6 +87,8 @@ template MulWrapper() {
   C1 <== Mul()( A1 , B1 );
   C1.val ==> C;
 }
+
+//------------------------------------------------------------------------------
 
 template InvWrapper() {
   signal input  A;

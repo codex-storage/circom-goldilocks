@@ -18,6 +18,7 @@ data Op
   = Neg
   | Add
   | Sub
+  | Sqr
   | Mul
   | Inv
   | Div
@@ -34,6 +35,7 @@ mainComponent op =
     Neg -> unary  "Neg"
     Add -> binary "Add"
     Sub -> binary "Sub"
+    Sqr -> unary  "Sqr"
     Mul -> binary "Mul"
     Inv -> unary  "Inv"
     Div -> binary "Div"
@@ -80,6 +82,9 @@ semantics_add (x,y) = Expecting $ Semantics.add x y
 
 semantics_sub :: (F,F) -> Expected F
 semantics_sub (x,y) = Expecting $ Semantics.sub x y
+
+semantics_sqr :: F -> Expected F
+semantics_sqr x = Expecting $ Semantics.sqr x 
 
 semantics_mul :: (F,F) -> Expected F
 semantics_mul (x,y) = Expecting $ Semantics.mul x y

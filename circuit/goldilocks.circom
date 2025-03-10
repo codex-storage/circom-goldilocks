@@ -191,7 +191,6 @@ template Mul() {
   C <== ReduceModP( SolinasExpoBig() )( A.val * B.val ); 
 }
 
-
 //
 // multiplication of 3 Goldilocks field elements
 // as this still fits into 192 < 254 bits, we can do it a bit more efficiently
@@ -207,6 +206,16 @@ template Mul3() {
   signal AB <== A.val * B.val;
 
   D <== ReduceModP( 2 * SolinasExpoBig() )( AB * C.val ); 
+}
+
+//--------------------------------------
+
+// Squaring (this is more interesting in the extension field case)
+//
+template Sqr() {
+  input  Goldilocks() A;
+  output Goldilocks() C;
+  C <== Mul()( A , A );
 }
 
 //------------------------------------------------------------------------------
